@@ -89,17 +89,14 @@ class StringCalculator{
 			return 0
 		}
 		if(numbers.size()>1 && !pattern.matcher(numbers)){
-			numbers = numbers.replaceAll(/[^-,\d]+/,",")
-			numbers = numbers.replaceFirst(/^,*/,"")
-			numbers = numbers.replaceAll(/,\d{4}+/,"")
+			numbers = numbers.replaceAll(/[^-,\d]+/,",").replaceFirst(/^,*/,"").replaceAll(/,\d{4}+/,"")
 			def lista = numbers.split(",").collect() {it.toInteger()}
 			return lista.sum()
 		}
 		if(pattern.matcher(numbers)){
-			def match = numbers =~ /-\d/
-			def string =[]
- 			(numbers =~ /-\d/).each(){string << it }
- 			throw new Exception("No se aceptan números negativos ${string}")
+			ArrayList stringNegatives =[]
+ 			(numbers =~ /-\d/).each(){stringNegatives << it }
+ 			throw new Exception("No se aceptan números negativos ${stringNegatives}")
 		}	
 	   numbers.toInteger()
 	} 
