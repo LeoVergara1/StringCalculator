@@ -1,3 +1,4 @@
+import java.util.regex.Pattern
 class StringCalculatorTest extends GroovyTestCase{
 
 	void testNull() {
@@ -51,24 +52,51 @@ class StringCalculatorTest extends GroovyTestCase{
 		def message = shouldFail {
 			obj.add("1,-2,3,-4,5,-6,-7,8")
 		}
-		assert message == "No se permiten números negativos [-2,-4,-6,-7]"
+		assert message == "No se aceptan números negativos [-2, -4, -6, -7]"
+	}
+	void testNumberbigger(){
+		StringCalculator obj = new StringCalculator()
+		int result = obj.add("//;\n1;2;3;4;5,1001")
+		assert result == 15
+		result = obj.add("//=\n3=9=4=20=10=2;3000")
+		assert result == 48	
+	}
+	void testDelimitersAnylength(){
+		StringCalculator obj = new StringCalculator()
+		int result = obj.add("//[***]\n1***2***3")
+		assert result == 6
+		result = obj.add("//=\n3=9=4=20=10=2;3000")
+		assert result == 48	
+	}
+	void testMultipleDelimiters(){
+		StringCalculator obj = new StringCalculator()
+		int result = obj.add("//[*][%]\n1*2%3")
+		assert result == 6
+		result = obj.add("//=\n3=9=4=20=10=2;3000")
+		assert result == 48	
 	}
 
 }
 
 class StringCalculator{
-
+	Pattern pattern = Pattern.compile(/-\d/)	
 	int add(String numbers){
 		if (!numbers){
 			return 0
 		}
-		if(numbers.size()>1){
+		if(numbers.size()>1 && !pattern.matcher(numbers)){
 			numbers = numbers.replaceAll(/[^-,\d]+/,",")
 			numbers = numbers.replaceFirst(/^,*/,"")
+			numbers = numbers.replaceAll(/,\d{4}+/,"")
 			def lista = numbers.split(",").collect() {it.toInteger()}
 			return lista.sum()
+		}
+		if(pattern.matcher(numbers)){
+			def match = numbers =~ /-\d/
+			def string =[]
+ 			match.each(){string << it }
+ 			throw new Exception("No se aceptan números negativos ${string}")
 		}	
 	   numbers.toInteger()
 	} 
-
 }
