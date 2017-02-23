@@ -56,9 +56,9 @@ class StringCalculatorTest extends GroovyTestCase{
 	}
 	void testNumberbigger(){
 		StringCalculator obj = new StringCalculator()
-		int result = obj.add("//;\n1;2;3;4;5,1001")
+		int result = obj.add("//;\n1;2;3;4;5;1001")
 		assert result == 15
-		result = obj.add("//=\n3=9=4=20=10=2;3000")
+		result = obj.add("//=\n3=9=4=20=10=2=3000")
 		assert result == 48	
 	}
 	void testDelimitersAnylength(){
@@ -70,10 +70,14 @@ class StringCalculatorTest extends GroovyTestCase{
 	}
 	void testMultipleDelimiters(){
 		StringCalculator obj = new StringCalculator()
-		int result = obj.add("//[*][%]\n1*2%3")
-		assert result == 6
-		result = obj.add("//=\n3=9=4=20=10=2;3000")
-		assert result == 48	
+		int result = obj.add("//[*][%]\n1*2%3*4")
+		assert result == 10
+	}
+
+	void testMultipleDelimitersMultipleSizes(){
+		StringCalculator obj = new StringCalculator()
+		int result = obj.add("//[**][%%%]\n1**2%%%3**4")
+		assert result == 10
 	}
 
 }
@@ -94,7 +98,7 @@ class StringCalculator{
 		if(pattern.matcher(numbers)){
 			def match = numbers =~ /-\d/
 			def string =[]
- 			match.each(){string << it }
+ 			(numbers =~ /-\d/).each(){string << it }
  			throw new Exception("No se aceptan números negativos ${string}")
 		}	
 	   numbers.toInteger()
