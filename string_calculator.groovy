@@ -84,17 +84,17 @@ class StringCalculatorTest extends GroovyTestCase{
 
 class StringCalculator{	
 	int add(String numbers){
+		if (!numbers){	
+			return 0
+		}
 		if(numbers.size()>1 && !Pattern.compile(/-\d/).matcher(numbers)){
-			numbers = numbers.replaceAll(/[^-,\d]+/,",").replaceFirst(/^,*/,"").replaceAll(/,\d{4}+/,"")
+			numbers = numbers.replaceAll(/[^,\d]+/,",").replaceFirst(/^,*/,"").replaceAll(/,\d{4}+/,"")
 			def lista = numbers.split(",").collect() {it.toInteger()}
 			return lista.sum()
 		}
 		if(Pattern.compile(/-\d/).matcher(numbers)){
  			ArrayList stringNegatives = (numbers =~ /-\d/).collect(){it} // (numbers =~ /-\d/) Recolección de numeros negativos
  			throw new Exception("No se aceptan números negativos ${stringNegatives}")
-		}
-		else{
-			return 0
 		}	
 	   numbers.toInteger()
 	} 
